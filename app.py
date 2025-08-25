@@ -7,21 +7,24 @@ model = joblib.load(r"C:\Users\ysanc\OneDrive\Desktop\Callorie_Intake_calculator
 scaler = joblib.load(r"C:\Users\ysanc\OneDrive\Desktop\Callorie_Intake_calculator\notebook\preprocessor.pkl")
 expected_columns = joblib.load(r"C:\Users\ysanc\OneDrive\Desktop\Callorie_Intake_calculator\notebook\columns.pkl")
 
-st.title("Daily calorie intake calculator")
-st.markdown("Provide the following details to know callorie you needs:")
+# Title and description
+st.markdown("<h1 style='text-align: center; color: #4CAF50;'>🥗 Daily Calorie Intake Calculator</h1>", unsafe_allow_html=True)
+st.markdown("### Provide your details to estimate your daily calorie needs.")
 
-# Collect user input
-Age = st.slider("Age", 5, 100, 40)
-Gender = st.selectbox("Gender", ["Male", "Female"])
-Working_Type = st.selectbox("Working Type", ['Unemployed', 'Desk Job', 'Freelancer', 'Healthcare', 'Retired', 'Manual Labor', 'Student', 'Self-Employed'])
-Sleep_Hours = st.number_input("Sleep Hours", 0, 24, 8)
-Height_m = st.number_input("Height (in m)", 0.25, 1.95, 1.65)
+# Layout with columns
+col1, col2 = st.columns(2)
+with col1:
+    Age = st.slider("📅 Age", 5, 100, 25)
+    Sleep_Hours = st.number_input("😴 Sleep Hours", 0, 24, 7)
+
+with col2:
+    Gender = st.selectbox("⚧️ Gender", ["Male", "Female"])
+    Working_Type = st.selectbox("💼 Working Type", ['Unemployed', 'Desk Job', 'Freelancer', 'Healthcare', 'Retired', 'Manual Labor', 'Student', 'Self-Employed'])
+    Height_m = st.number_input("📏 Height (in meters)", 0.25, 2.5, 1.68)
 
 
-# When Predict is clicked
-if st.button("Predict"):
-
-    # Create a raw input dictionary
+# Prediction
+if st.button("🔍 Predict"):
     raw_input = {
         'Age': Age,
         'Gender': Gender,
@@ -30,23 +33,44 @@ if st.button("Predict"):
         'Height_m': Height_m
     }
 
-    # Create input dataframe
     input_df = pd.DataFrame([raw_input])
 
-    # Fill in missing columns with 0s
+    # Fill missing columns
     for col in expected_columns:
         if col not in input_df.columns:
             input_df[col] = 0
 
-    # Reorder columns
     input_df = input_df[expected_columns]
-
-    # Scale the input
     scaled_input = scaler.transform(input_df)
-
-    # Make prediction
     prediction = model.predict(scaled_input)
 
-    # Display result
-    st.success(f"Estimated daily calorie intake: {prediction[0]:.2f} kcal")
+    
+# Display result
+    st.success(f"🔥 Estimated Daily Calorie Intake: **{prediction[0]:.2f} kcal**")
+
+
+# Info section
+with st.expander("ℹ️ Why these inputs matter?"):
+    st.write("""
+    - **Age** and **Gender** influence your basal metabolic rate.
+    - **Working Type** reflects your daily activity level.
+    - **Sleep Hours** affect metabolism and recovery.
+    - **Height** helps estimate your body composition.
+    """)
+
+# Custom button style
+st.markdown("""
+    <style>
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 10px;
+        padding: 0.5em 2em;
+        font-weight: bold;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
+
 
