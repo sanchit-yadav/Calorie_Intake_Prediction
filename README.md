@@ -9,7 +9,7 @@
 
 ## Application Screenshot
 
-![Description of screenshot](assets\Result.png)
+![Description of screenshot](assets/Result.png)
 
 
 ## Installation Guide
