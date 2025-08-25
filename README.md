@@ -37,5 +37,5 @@ I have used file path to load the data use your file path after downloading the 
 
 #### 4.Run the Application: To start the app, execute the following command in your terminal:
 ```bash
-python app.py
+streamlit run app.py
 ```
